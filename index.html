@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>4 meses ♥</title>
   
-  <!-- Iconos para el reproductor de música -->
   <link rel="stylesheet" href="https://web.archive.org/web/20230722202200cs_/https://use.fontawesome.com/releases/v5.14.0/css/all.css" crossorigin="anonymous">
   
   <style>
@@ -266,10 +265,10 @@
 </head>
 <body>
 
-<!-- REPRODUCTOR DE AUDIO (OCULTO) -->
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+
 <audio id="musicsrc" loop src="musica.mp3"></audio>
 
-<!-- PANTALLA DE CONTRASEÑA -->
 <div id="passwordScreen" class="screen password-screen active fade-in">
   <h2>Ingresa la contraseña</h2>
   <div class="input-display" id="inputDisplay">••••</div>
@@ -289,11 +288,9 @@
   </div>
 </div>
 
-<!-- PANTALLA DE LA CARTA -->
 <div id="notepadScreen" class="screen">
   <div class="notepad">
     
-    <!-- WIDGET REPRODUCTOR DE MÚSICA VISUAL -->
     <div id="musicplayer">
       <div id="musicpixel">
         <img src="https://64.media.tumblr.com/4b8b5edeb93a938b40814b1dd867833c/tumblr_inline_msbtvcHwwB1rkldve.gif" alt="nota musical">
@@ -316,7 +313,7 @@
       Amorcito, no puedo creer (en realidad sí) que ya cumplimos otro mes juntos. Estos últimos días las cosas entre nosotros han estado algo tensas, un par de discusiones por aquí y por allá que parecen no acabar nunca. Pero lo bueno de todo esto; sí acaban, porque aunque nos es difícil a veces, al final siempre buscamos la forma de resolver todo y ser los mismos de siempre. Los mismos dos tontos que se aman con todo su corazón.
     </p>
     <p>
-      Al menos así me veo a mi, una tonta locamente enamorada de su hombre. Así me tienes, Andrés, y no quisiera que fuera de otra manera.
+      Al menos así me veo a mi, una tonta locamente enamorada de su hombre. Así me tienes, Andrés, y no lo quisiera de ninguna otra manera.
     </p>
     
     <p>
@@ -325,7 +322,6 @@
     
     <p id="bubble">Te amo muchísimo. ♡</p>
 
-    <!-- SECCIÓN DE IMÁGENES -->
     <div class="gallery">
       <div class="img-container-floating">
         <img src="foto1.png" alt="Nuestro recuerdo 1" class="zoom">
@@ -338,26 +334,30 @@
   </div>
 </div>
 
-<!-- SCRIPTS DE INTERACCIÓN Y EFECTOS VISUALES -->
 <script type="text/javascript">
   const correctPassword = '1402';
   let input = '';
-  
+  const clickSound = document.getElementById('clickSound');
+  const musicsrc = document.getElementById('musicsrc');
+  const icon = document.querySelector('.playpause');
+
   document.querySelector('.playpause').addEventListener('click', togglePlayPause);
 
   function togglePlayPause() {
-    const audio = document.querySelector('#musicsrc');
-    const icon = document.querySelector('.playpause');
-    if (audio.paused) {
-      audio.play();
+    if (musicsrc.paused) {
+      musicsrc.play();
       icon.innerHTML = '<i class="fas fa-pause"></i>';
     } else {
-      audio.pause();
+      musicsrc.pause();
       icon.innerHTML = '<i class="fas fa-play"></i>';
     }
   }
 
   function enterDigit(digit) {
+    // Reproducir sonido de clic
+    clickSound.currentTime = 0; // Reiniciar para clics rápidos
+    clickSound.play();
+
     if (input.length < 4) {
       input += digit;
     }
@@ -383,10 +383,7 @@
           }, 50);
         }, 600);
         
-        const audio = document.querySelector('#musicsrc');
-        const icon = document.querySelector('.playpause');
-        
-        audio.play().then(() => {
+        musicsrc.play().then(() => {
           icon.innerHTML = '<i class="fas fa-pause"></i>';
         }).catch(error => {
           console.log("El navegador bloqueó el autoplay.");
