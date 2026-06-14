@@ -27,16 +27,27 @@
       overflow: hidden; 
     }
     .screen {
+      position: absolute; /* Cambiado a absolute para que no se empujen durante la transición */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: none;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
       text-align: center;
       box-sizing: border-box;
       padding: 20px;
+      /* ¡NUEVO! Configuración de la transición de opacidad */
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out; 
     }
     .active {
       display: flex;
+    }
+    /* ¡NUEVO! Clase auxiliar para activar el desvanecimiento */
+    .fade-in {
+      opacity: 1;
     }
     .password-screen {
       flex-direction: column;
@@ -83,7 +94,6 @@
       height: 450px;    
       overflow-y: scroll; 
       text-align: left;
-      /* ¡CORRECCIÓN! Cambiamos la sombra exterior gris por una rosa estética en la última línea */
       box-shadow: inset 13px 0px 6px -10px rgb(66 66 66 / 20%), 
                   inset -13px 0px 6px -10px rgb(66 66 66 / 56%), 
                   inset 0px 13px 6px -10px #ffffff, 
@@ -265,7 +275,8 @@
 <audio id="musicsrc" loop src="musica.mp3"></audio>
 
 <!-- PANTALLA DE CONTRASEÑA -->
-<div id="passwordScreen" class="screen password-screen active">
+<!-- ¡AQUÍ! Se añadió la clase fade-in inicial -->
+<div id="passwordScreen" class="screen password-screen active fade-in">
   <h2>Ingresa la contraseña</h2>
   <div class="input-display" id="inputDisplay">••••</div>
   <div class="keypad">
@@ -311,7 +322,7 @@
       Amorcito, no puedo creer (en realidad sí) que ya cumplimos otro mes juntos. Estos últimos días las cosas entre nosotros han estado algo tensas, un par de discusiones por aquí y por allá que parecen no acabar nunca. Pero lo bueno de todo esto; sí acaban, porque aunque nos es difícil a veces, al final siempre buscamos la forma de resolver todo y ser los mismos de siempre. Los mismos dos tontos que se aman con todo su corazón.
     </p>
     <p>
-      Al menos así me veo a mi, una tonta locamente enamorada de su hombre. Así me tienes, Andrés. Y es que, what would I do, without someone like you?
+      Al menos así me veo a mi, una tonta locamente enamorada de su hombre. Así me tienes, Andrés.
     </p>
     
     <p>
@@ -361,8 +372,21 @@
     
     if (input.length === 4) {
       if (input === correctPassword) {
-        document.getElementById('passwordScreen').classList.remove('active');
-        document.getElementById('notepadScreen').classList.add('active');
+        const passScreen = document.getElementById('passwordScreen');
+        const noteScreen = document.getElementById('notepadScreen');
+        
+        // ¡NUEVO! Lógica de transiciones encadenadas usando opacidad
+        passScreen.classList.remove('fade-in'); // Empieza a desvanecer el teclado
+        
+        setTimeout(() => {
+          passScreen.classList.remove('active'); // Oculta por completo el teclado
+          noteScreen.classList.add('active');    // Muestra la estructura de la carta
+          
+          setTimeout(() => {
+            noteScreen.classList.add('fade-in'); // Aparece suavemente la carta
+          }, 50); // Pequeño retraso para que el navegador capte el cambio
+          
+        }, 800); // Espera exacto los 0.8s que tarda en borrarse el teclado
         
         const audio = document.querySelector('#musicsrc');
         const icon = document.querySelector('.playpause');
